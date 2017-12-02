@@ -1,0 +1,81 @@
+/**
+ * 全局生效的css 
+ */
+:global{
+	body{
+		margin: 0;
+	}
+	.route{
+		height: 100vh;
+		overflow-y: hidden;
+		position: absolute;
+		top: 0;
+		width: 100%;
+	}
+	.route-leave {
+		.route();
+		animation: toLeft 5s;
+	}
+	.route-enter{
+		.route();
+		animation: fromRight 5s;
+	}
+	.routeBack-leave {
+		.route();
+		animation: toRight .5s;
+	}
+	.routeBack-enter{
+		.route();
+		animation: fromLeft .5s;
+	}
+
+	// .example-enter.example-enter-active {
+	// 	opacity: 1;
+	// 	transition: opacity 500ms ease-in;
+	// }
+	
+	// .example-leave {
+	// 	opacity: 1;
+	// }
+	
+	// .example-leave.example-leave-active {
+	// 	opacity: 0.01;
+	// 	transition: opacity 300ms ease-in;
+	// }
+}
+
+// home
+:global{
+	.addOne{
+		position: fixed;
+		z-index: 10;
+		font-size: 24px;
+		color: #F44336;
+		animation: addOne 1s;
+	}
+}
+@keyframes addOne{
+	from {transform: translate3d(0,0,0) scale(0.6,0.6); opacity: 0.9;}
+    to {transform: translate3d(0,-500%,0) scale(1,1); opacity: 0;}
+}
+
+
+@keyframes fromRight{
+    from {transform: translate3d(100%,0,0); opacity: 0.5;}
+    to {transform: translate3d(0,0,0); opacity: 1;}
+}
+
+@keyframes fromLeft{
+    from {transform: translate3d(-100%,0,0); opacity: 0.5;}
+    to {transform: translate3d(0,0,0); opacity: 1;}
+}
+
+@keyframes toLeft{
+    from {transform: translate3d(0,0,0); opacity: 1;}
+    to {transform: translate3d(-100%,0,0); opacity: 0.5;}
+}
+
+@keyframes toRight{
+    from {transform: translate3d(0,0,0); opacity: 1;}
+    to {transform: translate3d(100%,0,0); opacity: 0.5;}
+}
