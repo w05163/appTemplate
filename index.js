@@ -5,13 +5,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import { Provider } from 'react-redux';
+import { Route } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import matters from './src/models/matters';
 import record from './src/models/record';
 import store, { runModel } from './src/models';
 import App from './src/app';
-import AppRouter, { routerHistory, Router } from './src/router';
-import { toast } from './src/components/toast';
+import { Router } from './src/router';
 import config from './config';
 
 runModel(matters);
@@ -23,11 +23,8 @@ ReactDOM.render(
 (
 	<Provider store={store}>
 		<MuiThemeProvider>
-			<Router onUpdate={routerHistory.onChange} basename={config.basePath}>
-				<App>
-					<AppRouter />
-					{toast}
-				</App>
+			<Router basename={config.basePath}>
+				<Route render={props => (<App {...props} />)} />
 			</Router>
 		</MuiThemeProvider>
 	</Provider>

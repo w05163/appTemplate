@@ -16,7 +16,7 @@ class RecordPage extends Component {
 
 	render() {
 		return (
-			<div>
+			<div onClick={() => this.props.history.go(-1)}>
 				<NavBar transparent />
 				<div>
 					{this.getItem().map(item => <DayRecord data={item} key={item.date} />)}

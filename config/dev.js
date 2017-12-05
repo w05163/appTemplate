@@ -2,5 +2,5 @@
 
 export default {
 	basePath: '/',
-	root: ''
+	root: '/'
 };

@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { withRouter } from 'react-router-dom';
+import { toast } from './components/toast';
+import appRouter, { routerHistory } from './router';
 import './app.less';
-
-
-const location = window.location;
 
 class App extends Component {
 	constructor(props, context) {
@@ -17,19 +15,22 @@ class App extends Component {
 	}
 
 	render() {
+		const { location, history } = this.props;
+		const isBack = routerHistory.isBack(history);
+		routerHistory.onChange(history);
 		return (
 			<ReactCSSTransitionGroup
-				transitionName="route"
-				transitionEnterTimeout={300}
-				transitionLeaveTimeout={300}
+				transitionName={isBack ? 'routeBack' : 'route'}
+				transitionEnterTimeout={500}
+				transitionLeaveTimeout={500}
 			>
-				{<div key={location.pathname}>{this.props.children}</div>}
+				{appRouter(location)}
+				{toast}
 			</ReactCSSTransitionGroup>
 		);
 	}
 }
 
 
-export default withRouter(App);
+export default App;
 
-export const app = App;
