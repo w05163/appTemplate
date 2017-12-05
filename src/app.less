@@ -11,14 +11,15 @@
 		position: absolute;
 		top: 0;
 		width: 100%;
+		animation-fill-mode: forwards;
 	}
 	.route-leave {
 		.route();
-		animation: toLeft 5s;
+		animation: toLeft .5s;
 	}
 	.route-enter{
 		.route();
-		animation: fromRight 5s;
+		animation: fromRight .5s;
 	}
 	.routeBack-leave {
 		.route();

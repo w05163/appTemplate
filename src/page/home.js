@@ -7,6 +7,7 @@ import Avatar from 'material-ui/Avatar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import DateRange from 'material-ui/svg-icons/action/date-range';
+import Page from '../components/page';
 
 const css = {
 	add: {
@@ -68,7 +69,7 @@ class HomePage extends Component {
 	render() {
 		const { list } = this.props;
 		return (
-			<div>
+			<Page>
 				<List>
 					{list.map(this.renderItem)}
 				</List>
@@ -82,7 +83,7 @@ class HomePage extends Component {
 						<ContentAdd />
 					</FloatingActionButton>
 				</Link>
-			</div>
+			</Page>
 		);
 	}
 }

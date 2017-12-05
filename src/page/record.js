@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 
 import NavBar from '../components/navBar';
 import DayRecord from '../containers/dayRecord';
+import Page from '../components/page';
 
 class RecordPage extends Component {
 	getItem() {
@@ -16,12 +17,12 @@ class RecordPage extends Component {
 
 	render() {
 		return (
-			<div onClick={() => this.props.history.go(-1)}>
+			<Page>
 				<NavBar transparent />
 				<div>
 					{this.getItem().map(item => <DayRecord data={item} key={item.date} />)}
 				</div>
-			</div>
+			</Page>
 		);
 	}
 }

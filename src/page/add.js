@@ -15,6 +15,7 @@ import FlatButton from 'material-ui/FlatButton';
 import IconButton from 'material-ui/IconButton';
 import muiThemeable from 'material-ui/styles/muiThemeable';
 import showToast from '../components/toast';
+import Page from '../components/page';
 
 const sty = {
 	paper: {
@@ -142,7 +143,7 @@ class AddPage extends Component {
 	render() {
 		const { stepIndex } = this.state;
 		return (
-			<div >
+			<Page>
 				<Stepper activeStep={stepIndex} orientation="vertical">
 					<Step>
 						<StepLabel>名称</StepLabel>
@@ -172,7 +173,7 @@ class AddPage extends Component {
 						</StepContent>
 					</Step>
 				</Stepper>
-			</div>
+			</Page>
 		);
 	}
 }
