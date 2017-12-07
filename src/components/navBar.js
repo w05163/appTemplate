@@ -7,7 +7,8 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 
 const tran = {
-	backgroundColor: 'transparent'
+	backgroundColor: 'transparent',
+	boxShadow: 'none'
 };
 
 function back() {

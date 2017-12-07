@@ -37,11 +37,11 @@ function makeEffectFun(namespace, proxyPut) {
 	};
 }
 
-// 生成代理put方法，会自动在type前面加上"namespace\"
-function makeProxyPut(namespace) {
+// 生成代理put或者dispatch方法，会自动在type前面加上"namespace\"
+function makeProxy(namespace, fun) {
 	return function ({ type, ...action }) {
 		type = type.includes('/') ? type : `${namespace}/${type}`;
-		return put({ ...action, type });
+		return fun({ ...action, type });
 	};
 }
 
@@ -53,13 +53,18 @@ export function runModel(model) {
 	initialState[namespace] = state;
 	modelReducers[namespace] = reducers;
 	modelEffects[namespace] = effects;
-	const proxyPut = makeProxyPut(namespace);
+	const proxyPut = makeProxy(namespace, put);
+	const proxyDispatch = makeProxy(namespace, store.dispatch);
 	const effect = makeEffectFun(namespace, proxyPut);
 
 	for (const k in effects) {
 		sagaMiddleware.run(function *() {
 			yield* takeEvery(`${namespace}/${k}`, effect);
 		});
+	}
+
+	for (const k in subscriptions) {
+		subscriptions[k]({ dispatch: proxyDispatch, state });
 	}
 }
 

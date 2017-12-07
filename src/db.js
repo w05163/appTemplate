@@ -92,18 +92,27 @@ class Store {
 		});
 	}
 
-    async list(indexName, range, direction = 'next', limit) { // 获取所有记录（以后看需要加上条件）
+	async list(opt = {}) {
+		const {
+			indexName,
+			direction = 'next',
+			page = 1, size
+		} = opt;
+		let { range } = opt;
 		const store = await db.doTransaction(this.name);
 		const data = [];
 		let index = store;
 		if (indexName) index = store.index(indexName);
+		if (size) {
+			range = IDBKeyRange.bound((page - 1) * size, page * size);
+		}
 		return new Promise((res, ret) => {
 			const req = index.openCursor(range, direction);
 			req.onsuccess = function (e) {
 				const r = e.target.result;
 				if (r) {
 					data.push(r.value);
-					if (!limit || data.length < limit) r.continue();
+					if (!size || data.length < size) r.continue();
 					else res(data);
 				} else {
 					res(data);
@@ -123,5 +132,6 @@ class Store {
 }
 
 export default {
-	matter: new Store('matter')
+	matter: new Store('matter'),
+	record: new Store('log')
 };
