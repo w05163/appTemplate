@@ -2,7 +2,7 @@
 
 /** 日期格式化 */
 export function toDateString(date = new Date()) {
-	return `${date.getFullYear()}-${pad(date.getMonth())}-${pad(date.getDate())}`;
+	return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 }
 
 /** 补0 */

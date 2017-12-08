@@ -10,7 +10,7 @@ function newRecord(matter) {
 	const record = [];
 	if (matter) {
 		record.push({
-			...record,
+			...matter,
 			cTime: new Date(),
 			uTime: new Date(),
 			count: 1
@@ -24,10 +24,7 @@ const size = 10;
 export default extendModel({
 	namespace: 'record',
 	state: {
-		list: [
-			{ date: '20171122', record: [{ id: 213, a: '123' }, { id: 233, a: '234' }] },
-			{ date: '20171123', record: [{ id: 213, a: '123' }, { id: 233, a: '234' }] },
-		],
+		list: [],
 		index: 0,
 		page: 1
 	},
@@ -39,14 +36,14 @@ export default extendModel({
 	effects: {
 		*init(action, { put }) {
 			const { page } = yield select(s => s.record);
-			const recordList = yield call(list, { page, size });
+			const recordList = yield call(list, { page, size, direction: 'prev' });
 			let today = recordList[0];
 			if (!today || today.date !== toDateString()) {
 				today = newRecord();
 				recordList.unshift(today);
 			}
 			console.log(recordList);
-			yield put({ type: 'set', list: recordList });
+			yield put({ type: 'set', list: recordList, page: page + 1 });
 		},
 		*add({ matter }, { put }) {
 			const { list: recordList } = yield select(state => state.record);
@@ -81,6 +78,10 @@ export default extendModel({
 				...state,
 				recordList: [data].concat(isNew ? recordList : recordList.slice(1))
 			};
+		},
+		moveTo(state, { index }) {
+			if (index === state.index || (!index && index !== 0)) return state;
+			return { ...state, index };
 		}
 	}
 });

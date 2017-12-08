@@ -1,5 +1,9 @@
 /** 每日列表 */
 import React, { Component } from 'react';
+import Avatar from 'material-ui/Avatar';
+
+import IconButton from 'material-ui/IconButton';
+import Icon from '../components/icon';
 
 const sty = {
 	root: {
@@ -13,7 +17,27 @@ const sty = {
 		margin: 'auto',
 		borderRadius: '4px',
 		boxShadow: '0 2px 10px rgba(0,0,0,0.5)',
-		padding: '1em'
+		padding: '1em',
+		background: 'rgba(0,0,0,0.3)'
+	},
+	title: {
+		verticalAlign: 'super',
+		marginLeft: '0.5em'
+	},
+	right: {
+		float: 'right',
+		width: '30px',
+		height: '20px',
+		display: 'inline-block',
+		background: 'rgba(255,255,255,0.3)',
+		textAlign: 'center',
+		borderRadius: '10px',
+		fontSize: '0.8em',
+		lineHeight: '20px',
+		marginTop: '10px'
+	},
+	item: {
+		marginBottom: '1em'
 	}
 };
 
@@ -21,7 +45,13 @@ const sty = {
 
 class DayRecord extends Component {
 	renderItem(d) {
-		return (<div>123</div>);
+		return (
+			<div key={d.id} style={sty.item}>
+				<Avatar icon={<Icon type={d.icon} />} backgroundColor={d.color} />
+				<span style={sty.title}>{d.name}</span>
+				{d.count > 1 ? <span style={sty.right}>{d.count}</span> : null}
+			</div>
+		);
 	}
 
 	render() {
@@ -29,7 +59,7 @@ class DayRecord extends Component {
 		return (
 			<div style={sty.root}>
 				<div style={sty.con}>
-					<p>2017-12-05</p>
+					<p>{data.date}</p>
 					{data.record.map(this.renderItem)}
 				</div>
 			</div>

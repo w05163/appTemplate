@@ -14,4 +14,3 @@ export function update(dayRecord) {
 export function add(dayRecord) {
 	return db.record.add(dayRecord);
 }
-

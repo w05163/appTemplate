@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { List, ListItem } from 'material-ui/List';
-import FontIcon from 'material-ui/FontIcon';
 import Avatar from 'material-ui/Avatar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import DateRange from 'material-ui/svg-icons/action/date-range';
 import Page from '../components/page';
+import Icon from '../components/icon';
 
 const css = {
 	add: {
@@ -50,14 +50,7 @@ class HomePage extends Component {
 		return (
 			<ListItem
 				key={d.id}
-				leftAvatar={
-					<Avatar
-						icon={
-							<FontIcon className="icons">{d.icon}</FontIcon>
-						}
-						backgroundColor={d.color}
-					/>
-				}
+				leftAvatar={<Avatar icon={<Icon type={d.icon} />} backgroundColor={d.color} />}
 				primaryText={d.name}
 				secondaryText={`总共${d.count}次`}
 				style={css.item}
