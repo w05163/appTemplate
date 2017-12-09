@@ -8,26 +8,41 @@
  * log:{name,icon,color,mId}
  */
 
+const updateDbObj = [
+	function (db) {
+		const matter = db.createObjectStore('matter', { keyPath: 'id', autoIncrement: true });
+		matter.createIndex('uTime', 'uTime', { unique: false });
+		matter.createIndex('cTime', 'cTime', { unique: false });
+		matter.createIndex('count', 'count', { unique: false });
+
+		const log = db.createObjectStore('log', { keyPath: 'id', autoIncrement: true });
+		log.createIndex('uTime', 'uTime', { unique: false });
+		log.createIndex('cTime', 'cTime', { unique: false });
+	},
+	function (db) {
+		const file = db.createObjectStore('file', { keyPath: 'id', autoIncrement: true });
+		file.createIndex('uTime', 'uTime', { unique: false });
+		file.createIndex('cTime', 'cTime', { unique: false });
+		file.createIndex('key', 'key', { unique: true });
+	},
+];
+
 export class DB {
     constructor() {
-        const request = window.indexedDB.open('log', 1);
+        const request = window.indexedDB.open('log', updateDbObj.length);
         request.onsuccess = (event) => {
 			this.dbReady(event);
         };
 
         request.onupgradeneeded = (event) => {
-			const db = event.target.result;
+			const { oldVersion, newVersion, target } = event;
+			const { result: db, transaction } = target;
 
-            const matter = db.createObjectStore('matter', { keyPath: 'id', autoIncrement: true });
-            matter.createIndex('uTime', 'uTime', { unique: false });
-            matter.createIndex('cTime', 'cTime', { unique: false });
-			matter.createIndex('count', 'count', { unique: false });
+			for (let i = oldVersion; i < updateDbObj.length; i++) {
+				updateDbObj[i](db);
+			}
 
-			const log = db.createObjectStore('log', { keyPath: 'id', autoIncrement: true });
-            log.createIndex('uTime', 'uTime', { unique: false });
-			log.createIndex('cTime', 'cTime', { unique: false });
-
-			event.target.transaction.oncomplete = e => this.dbReady(event);
+			transaction.oncomplete = () => this.dbReady(event);
 		};
 
 		this.todo = [];
@@ -133,5 +148,6 @@ class Store {
 
 export default {
 	matter: new Store('matter'),
-	record: new Store('log')
+	record: new Store('log'),
+	file: new Store('file')
 };

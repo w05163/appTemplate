@@ -7,11 +7,13 @@ import { connect } from 'react-redux';
 import NavBar from '../components/navBar';
 import DayRecord from '../containers/dayRecord';
 import Page from '../components/page';
-import { view } from '../utils/browser';
+import { view, pickFile } from '../utils/browser';
 
 const sty = {
 	bg: {
-		backgroundImage: 'url("./bg.jpg")'
+		backgroundImage: 'url("./bg.jpg")',
+		backgroundPosition: 'center',
+		backgroundSize: 'cover'
 	},
 	view: {
 		display: 'flex',
@@ -134,10 +136,36 @@ class RecordPage extends Component {
 
 	viewRef = d => this.view = d
 
+	recordTime = (e) => {
+		const { pageX, pageY } = e.targetTouches[0];
+		this.touch = {
+			x: pageX,
+			y: pageY,
+			time: new Date()
+		};
+	}
+
+	uploadImage = async (e) => {
+		const { dispatch } = this.props;
+		const { pageX, pageY } = e.changedTouches[0];
+		const { x, y, time } = this.touch;
+		if (Math.abs(pageX - x) < 10 && Math.abs(pageY - y) < 10 && new Date() - time > 500) { // 是否长按
+			const [imgFile] = await pickFile();
+			dispatch({ type: 'record/bg', file: imgFile });
+		}
+	}
+
 	render() {
+		const { backgroundImage: bgUrl } = this.props;
 		const { style, data } = this.getItem();
+		const bgSty = { ...sty.bg };
+		if (bgUrl)bgSty.backgroundImage = `url("${bgUrl}")`;
 		return (
-			<Page style={sty.bg}>
+			<Page
+				style={bgSty}
+				onTouchStart={this.recordTime}
+				onTouchEnd={this.uploadImage}
+			>
 				<NavBar transparent />
 				<div
 					ref={this.viewRef}

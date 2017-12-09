@@ -5,3 +5,17 @@ export const view = {
 	width: window.screen.availWidth,
 	height: window.screen.availHeight
 };
+
+
+export function pickFile(accept = 'image/*', multiple) {
+	const input = document.createElement('input');
+	input.type = 'file';
+	input.accept = accept;
+	input.multiple = multiple;
+	return new Promise((res) => {
+		input.addEventListener('change', () => {
+			res(input.files);
+		});
+		input.click();
+	});
+}
