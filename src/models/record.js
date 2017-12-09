@@ -52,7 +52,7 @@ export default extendModel({
 			if (today.date === toDateString()) { // 校验一下是不是过了12点
 				const t = today.record.find(r => r.id === matter.id);
 				if (t) { // 如果今天已经做过，则加1
-					Object.assign(today, t);
+					Object.assign(matter, t);
 					matter.uTime = new Date();
 					matter.count += 1;
 					today.record = today.record.map(r => r.id === matter.id ? matter : r);
@@ -62,7 +62,7 @@ export default extendModel({
 					matter.uTime = new Date();
 					today.record = today.record.concat(matter);
 				}
-				yield call(update, today);
+				// yield call(update, today);
 			} else {
 				action.isNew = true;
 				action.data = newRecord(matter);
@@ -74,9 +74,10 @@ export default extendModel({
 	reducers: {
 		setToday(state, { data, isNew }) {
 			const { recordList = [] } = state;
+			console.log(data);
 			return {
 				...state,
-				recordList: [data].concat(isNew ? recordList : recordList.slice(1))
+				list: [data].concat(isNew ? recordList : recordList.slice(1))
 			};
 		},
 		moveTo(state, { index }) {

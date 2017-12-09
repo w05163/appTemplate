@@ -27,7 +27,7 @@ export default extendModel({
 			const d = matterList.find(m => m.id === id);
 			const data = { ...d, count: d.count + 1 };
 			yield call(update, data);
-			yield put({ type: 'record/add', matter: data });
+			yield put({ type: 'record/add', matter: { ...data } });
 			yield put({ type: 'update', data });
 		}
 	},

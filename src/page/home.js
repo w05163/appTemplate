@@ -6,8 +6,10 @@ import Avatar from 'material-ui/Avatar';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import DateRange from 'material-ui/svg-icons/action/date-range';
+import { green500 } from 'material-ui/styles/colors';
 import Page from '../components/page';
 import Icon from '../components/icon';
+import Animation from '../components/animation';
 
 const css = {
 	add: {
@@ -46,6 +48,19 @@ class HomePage extends Component {
 		this.props.dispatch({ type: 'matters/count', id });
 	}
 
+	renderRight(d) {
+		const { id, count } = d;
+		const { recordList } = this.props;
+		const today = recordList[0];
+		return (
+			<Animation type="scale">
+				{today && today.record.some(r => r.id === id) ?
+					<Icon type="check_circle" color={green500} key={count}style={{ position: 'absolute' }} /> : null
+				}
+			</Animation>
+		);
+	}
+
 	renderItem = (d) => {
 		return (
 			<ListItem
@@ -55,6 +70,7 @@ class HomePage extends Component {
 				secondaryText={`总共${d.count}次`}
 				style={css.item}
 				onClick={e => this.count(d.id, e)}
+				rightIcon={this.renderRight(d)}
 			/>
 		);
 	}
@@ -81,4 +97,7 @@ class HomePage extends Component {
 	}
 }
 
-export default connect(state => state.matters)(HomePage);
+export default connect(state => ({
+	...state.matters,
+	recordList: state.record.list
+}))(HomePage);

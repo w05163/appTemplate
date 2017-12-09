@@ -1,0 +1,64 @@
+
+@keyframes fromRight{
+    from {transform: translate3d(100%,0,0); opacity: 0.2;}
+    to {transform: translate3d(0,0,0); opacity: 1;}
+}
+
+@keyframes fromLeft{
+    from {transform: translate3d(-100%,0,0); opacity: 0.2;}
+    to {transform: translate3d(0,0,0); opacity: 1;}
+}
+
+@keyframes toLeft{
+    from {transform: translate3d(0,0,0); opacity: 1;}
+    to {transform: translate3d(-80%,0,0); opacity: 0;}
+}
+
+@keyframes toRight{
+    from {transform: translate3d(0,0,0); opacity: 1;}
+    to {transform: translate3d(80%,0,0); opacity: 0;}
+}
+
+@keyframes scale{
+    from {transform: scale3d(0.4,0.4,0.4); opacity: 0;}
+    to {transform: scale3d(1,1,1); opacity: 1;}
+}
+@keyframes scaleOut{
+    from {transform: scale3d(1,1,1); opacity: 1;}
+    to {transform: scale3d(0.4,0.4,0.4); opacity: 0;}
+}
+
+
+:global{
+	.route{
+		height: 100vh;
+		overflow-y: hidden;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		animation-fill-mode: forwards;
+	}
+	.route-leave {
+		.route();
+		animation: toLeft .5s;
+	}
+	.route-enter{
+		.route();
+		animation: fromRight .5s;
+	}
+	.routeBack-leave {
+		.route();
+		animation: toRight .5s;
+	}
+	.routeBack-enter{
+		.route();
+		animation: fromLeft .5s;
+	}
+
+	.scale-enter{
+		animation: scale .2s;
+	}
+	.scale-leave{
+		animation: scaleOut .2s;
+	}
+}
