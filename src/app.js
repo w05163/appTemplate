@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
 import { toast } from './components/toast';
 import Animation from './components/animation';
-import appRouter, { routerHistory } from './router';
+import renderRouter, { routerHistory } from './router';
 import './app.less';
 
+@withRouter
 class App extends Component {
 	constructor(props, context) {
 		super(props, context);
@@ -20,9 +22,9 @@ class App extends Component {
 		routerHistory.onChange(history);
 		return (
 			<Animation
-				transitionName={isBack ? 'routeBack' : 'route'}
+				type={isBack ? 'routeBack' : 'route'}
 			>
-				{appRouter(location)}
+				{renderRouter(location)}
 				{toast}
 			</Animation>
 		);

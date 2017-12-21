@@ -29,36 +29,34 @@
 }
 
 
-:global{
-	.route{
-		height: 100vh;
-		overflow-y: hidden;
-		position: absolute;
-		top: 0;
-		width: 100%;
-		animation-fill-mode: forwards;
-	}
-	.route-leave {
-		.route();
-		animation: toLeft .5s;
-	}
-	.route-enter{
-		.route();
-		animation: fromRight .5s;
-	}
-	.routeBack-leave {
-		.route();
-		animation: toRight .5s;
-	}
-	.routeBack-enter{
-		.route();
-		animation: fromLeft .5s;
-	}
+.route{
+	height: 100vh;
+	overflow-y: hidden;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	animation-fill-mode: forwards;
+}
+:global(.route-leave ){
+	.route();
+	animation: toLeft .4s;
+}
+:global(.route-enter){
+	.route();
+	animation: fromRight .4s;
+}
+:global(.routeBack-leave) {
+	.route();
+	animation: toRight .4s;
+}
+:global(.routeBack-enter){
+	.route();
+	animation: fromLeft .4s;
+}
 
-	.scale-enter{
-		animation: scale .2s;
-	}
-	.scale-leave{
-		animation: scaleOut .2s;
-	}
+:global(.scale-enter){
+	animation: scale .2s;
+}
+:global(.scale-leave){
+	animation: scaleOut .2s;
 }

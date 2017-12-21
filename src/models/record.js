@@ -47,8 +47,11 @@ export default extendModel({
 				today = newRecord();
 				recordList.unshift(today);
 			}
-			const { file } = yield call(getFile, STATIC.bgKey);
-			yield put({ type: 'setBg', file });
+			const res = yield call(getFile, STATIC.bgKey);
+			if (res) {
+				const { file } = res;
+				yield put({ type: 'setBg', file });
+			}
 			yield put({ type: 'set', list: recordList, page: page + 1 });
 		},
 		*add({ matter }, { put }) {

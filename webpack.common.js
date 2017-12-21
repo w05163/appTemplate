@@ -26,6 +26,7 @@ const config = {
 								'react'
 							],
 							plugins: [
+								'transform-decorators-legacy',
 								require('babel-plugin-transform-object-rest-spread'),
 								require('babel-plugin-transform-class-properties')
 							]
@@ -37,7 +38,12 @@ const config = {
 				test: /\.less$/,
 				use: [
 					{ loader: 'style-loader' },
-					{ loader: 'css-loader' },
+					{
+						loader: 'css-loader',
+						options: {
+							modules: true
+						}
+					},
 					{ loader: 'less-loader' }
 				]
 			}

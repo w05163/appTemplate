@@ -10,6 +10,6 @@ if (process.env.NODE_ENV !== 'production') {
 
 export default {
 	basePath: '/log/',
-	root: 'index.html',
+	root: '',
 	...config
 };

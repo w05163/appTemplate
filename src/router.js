@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, matchPath } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import config from '../config';
 import Home from './page/home';
 import Record from './page/record';
@@ -12,9 +12,12 @@ const routers = [
 	{ path: '/record', component: Record }
 ];
 
-function appRouter(location) {
-	const rou = routers.find(r => matchPath(location.pathname, r));
-	return <Route {...rou} location={location} key={rou.path} />;
+function renderRouter(location) {
+	return (
+		<Switch location={location} key={location.pathname}>
+			{routers.map(r => <Route {...r} key={r.path} />)}
+		</Switch>
+	);
 }
 
 const historyList = [];
@@ -55,5 +58,5 @@ export const routerHistory = {
 };
 
 
-export const Router = BrowserRouter;
-export default appRouter;
+export const AppRouter = BrowserRouter;
+export default renderRouter;

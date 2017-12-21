@@ -72,19 +72,28 @@ class RecordPage extends Component {
 		const [dx, dy] = this.getDxy(e.targetTouches[0]);
 		if (!direction) {
 			// 识别是否横移
-			if (Math.abs(dx) > Math.abs(dy)) {
-				this.touchData.direction = 'x';
+			if (Math.abs(dx) >= Math.abs(dy)) {
+				const { pageX, pageY } = e.targetTouches[0];
+				this.touchData = {
+					start: { x: pageX, y: pageY, date: new Date() },
+					last: { lx: pageX, ly: pageX, date: new Date() },
+					direction: 'x'
+				};
 			} else {
-				this.touchData.direction = 'y';
 				return this.clearTouch();
 			}
-		} else if (direction === 'y') return;
-
-		this.move(dx);
+		} else {
+			this.move(dx);
+		}
 	}
 
 	touchEnd = (e) => {
-		if (!this.touchData || this.touchData.next === 0 || this.touchData.next) return;
+		if (
+			!this.touchData
+			|| this.touchData.next === 0
+			|| this.touchData.next
+			|| this.touchData.direction !== 'x'
+		) return;
 		const { index, list } = this.props;
 		const { start: { date: stime } } = this.touchData;
 		const totalTime = new Date() - stime;// 总时间
