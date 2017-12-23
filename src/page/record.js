@@ -11,7 +11,6 @@ import { view, pickFile } from '../utils/browser';
 
 const sty = {
 	bg: {
-		backgroundImage: 'url("./bg.jpg")',
 		backgroundPosition: 'center',
 		backgroundSize: 'cover'
 	},
