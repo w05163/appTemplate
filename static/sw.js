@@ -1,8 +1,9 @@
+const staticRoot = 'https://static-1252458005.cosgz.myqcloud.com/';
 const cacheStorageKey = 'minimal-pwa-1';
 const cacheList = [
 	'/log/',
-	'https://static-1252458005.cosgz.myqcloud.com/log/index.js.gz?sign=g+FbAKTQXiDQqnaYOD+m2HK3W8phPTEyNTI0NTgwMDUmaz1BS0lEZURib3JqM3ZwWkJmQld1ZVM1YzljMkNCeW1UemJWVUgmZT0xNTE2NjI5NDMyJnQ9MTUxNDAzNzQzMiZyPTE5MDcxODQwMzQmZj0vbG9nL2luZGV4LmpzLmd6JmI9c3RhdGlj',
-	'https://static-1252458005.cosgz.myqcloud.com/icon.woff?sign=4em/ZIOOfS2UYZ3EhoQVvjjt1BxhPTEyNTI0NTgwMDUmaz1BS0lEZURib3JqM3ZwWkJmQld1ZVM1YzljMkNCeW1UemJWVUgmZT0xNTE2NjI4ODYyJnQ9MTUxNDAzNjg2MiZyPTEzNjkzNTkwMjAmZj0vaWNvbi53b2ZmJmI9c3RhdGlj'
+	`${staticRoot}log/index.js.gz`,
+	`${staticRoot}icon.woff`
 ];
 
 self.addEventListener('install', (e) => {
