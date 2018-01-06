@@ -3,10 +3,10 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
 import NavBar from '../components/navBar';
 import DayRecord from '../containers/dayRecord';
 import Page from '../components/page';
+import Carousel from '../components/carousel';
 import { view, pickFile } from '../utils/browser';
 
 const sty = {
@@ -22,127 +22,36 @@ const sty = {
 		padding: '1em 0',
 		transform: 'none',
 		transitionTimingFunction: 'linear'
+	},
+	dv: {
+		padding: '1em 0'
 	}
 };
 
+const length = 3;
+
 class RecordPage extends Component {
-	componentDidUpdate() {
-		this.view.style.transform = 'none';
+	state = {
+		slideIndex: 0
 	}
 
 	getItem() {
 		const { index, list } = this.props;
-		const res = { style: { ...sty.view, marginLeft: '-100vw' } };
-		if (index <= 0) {
-			res.data = list.slice(0, 2);
-			res.style = sty.view;
-		} else if (index === list.index - 1) res.data = list.slice(index - 1, index);
-		else res.data = list.slice(index - 1, index + 2);
-		return res;
-	}
-
-	getDxy(touch) {
-		const { pageX, pageY } = touch;
-		const { start: { x, y }, last: { lx, date }, sp: oldSp } = this.touchData;
-		const dx = pageX - x;
-		const dy = pageY - y;
-		const sp = (pageX - lx) / ((new Date() - date) / 1000);
-		if (sp) {
-			this.touchData.last = { lx: pageX, ly: pageX, date: new Date() };
-			this.touchData.sp = sp;
+		if (list.length <= length) {
+			return list;
 		}
-		return [dx, dy, sp || oldSp];
-	}
-
-	touchStart= (e) => {
-		if (this.touchData) return;
-		const { pageX, pageY } = e.targetTouches[0];
-		this.touchData = {
-			start: { x: pageX, y: pageY, date: new Date() },
-			last: { lx: pageX, ly: pageX, date: new Date() },
-			direction: null
-		};
-		this.view.style.willChange = 'transform';
-	}
-
-	touchMove = (e) => {
-		if (!this.touchData || this.touchData.next === 0 || this.touchData.next) return;
-		const { direction } = this.touchData;
-		const [dx, dy] = this.getDxy(e.targetTouches[0]);
-		if (!direction) {
-			// 识别是否横移
-			if (Math.abs(dx) >= Math.abs(dy)) {
-				const { pageX, pageY } = e.targetTouches[0];
-				this.touchData = {
-					start: { x: pageX, y: pageY, date: new Date() },
-					last: { lx: pageX, ly: pageX, date: new Date() },
-					direction: 'x'
-				};
-			} else {
-				return this.clearTouch();
-			}
-		} else {
-			this.move(dx);
+		let start = index - Math.floor((length - 1) / 2);
+		let end = start + length;
+		if (start < 0) {
+			start = 0;
+			end = length;
 		}
-	}
-
-	touchEnd = (e) => {
-		if (
-			!this.touchData
-			|| this.touchData.next === 0
-			|| this.touchData.next
-			|| this.touchData.direction !== 'x'
-		) return;
-		const { index, list } = this.props;
-		const { start: { date: stime } } = this.touchData;
-		const totalTime = new Date() - stime;// 总时间
-		const [dx, dy, sp] = this.getDxy(e.changedTouches[0]);
-		const s = Math.abs(totalTime > 250 ? sp : dx / (totalTime / 1000));// 总时间大于300则取最后速度，否则去平均速度
-		const ax = Math.abs(dx);
-		let sx = ax;
-		let x = 0;
-		const next = dx / ax;
-		this.touchData.next = index;
-		console.log('位移', dx);
-		console.log('速度', s);
-		if (ax > view.width / 3 || s > 400) {
-			sx = view.width - ax;
-			x = view.width * next;
-			this.touchData.next = index - next;
+		if (end > list.length) {
+			end = list.length;
+			start = end - length;
 		}
-		if (this.touchData.next < 0 || this.touchData.next >= list.length) {
-			x = 0;
-			this.touchData.next = index;
-		}
-
-		let time = 0.8 * (sx / view.width);
-
-		if (x) { // 会切页
-			time = sx / s;
-			if (time > 0.4)time = 0.4;
-			// if (time < 0.1)time = 0.1;
-		}
-		console.log(totalTime);
-
-		this.view.style.transition = `transform ${time}s`;
-		this.move(x);
+		return list.slice(start, end);
 	}
-
-	move(x) {
-		// 把view移动x px
-		this.view.style.transform = `translate(${x}px,0px)`;
-	}
-
-	clearTouch = () => {
-		const { dispatch } = this.props;
-		const { next } = this.touchData;
-		this.view.style.willChange = 'auto';
-		this.view.style.transition = 'none';
-		this.touchData = null;
-		dispatch({ type: 'record/moveTo', index: next });
-	}
-
-	viewRef = d => this.view = d
 
 	recordTime = (e) => {
 		const { pageX, pageY } = e.targetTouches[0];
@@ -163,9 +72,18 @@ class RecordPage extends Component {
 		}
 	}
 
+	slideChange = next => Promise.resolve().then(() => {
+		const { slideIndex } = this.state;
+		const { index, list, dispatch } = this.props;
+		const nextIndex = index + (slideIndex < next ? 1 : -1);
+		this.setState({ slideIndex: nextIndex <= 0 ? 0 : nextIndex >= list.length - 1 ? 2 : 1 });
+		dispatch({ type: 'record/moveTo', index: nextIndex });
+	})
+
 	render() {
 		const { backgroundImage: bgUrl } = this.props;
-		const { style, data } = this.getItem();
+		const { slideIndex } = this.state;
+		const data = this.getItem();
 		const bgSty = { ...sty.bg };
 		if (bgUrl)bgSty.backgroundImage = `url("${bgUrl}")`;
 		return (
@@ -175,16 +93,15 @@ class RecordPage extends Component {
 				onTouchEnd={this.uploadImage}
 			>
 				<NavBar transparent />
-				<div
-					ref={this.viewRef}
-					style={style}
-					onTouchStart={this.touchStart}
-					onTouchMove={this.touchMove}
-					onTouchEnd={this.touchEnd}
-					onTransitionEnd={this.clearTouch}
+				<Carousel
+					decorators={null}
+					slideIndex={slideIndex}
+					onAnimateSlideEnd={this.slideChange}
 				>
-					{data.map(item => <DayRecord data={item} key={item.date} />)}
-				</div>
+					{data.map(item => (
+						<div style={sty.dv} key={item.date} ><DayRecord data={item} /></div>
+					))}
+				</Carousel>
 			</Page>
 		);
 	}

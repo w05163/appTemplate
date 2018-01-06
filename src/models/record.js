@@ -9,7 +9,8 @@ import extendModel from './base';
 
 const STATIC = Object.freeze({
 	bgKey: 'recordBackground',
-	size: 10
+	size: 10,
+	last: 3 // 剩余3条时加载下一页
 });
 
 function newRecord(matter) {
@@ -40,19 +41,36 @@ export default extendModel({
 	},
 	effects: {
 		*init(action, { put }) {
-			const { page } = yield select(s => s.record);
-			const recordList = yield call(list, { page, size: STATIC.size, direction: 'prev' });
-			let today = recordList[0];
-			if (!today || today.date !== toDateString()) {
-				today = newRecord();
-				recordList.unshift(today);
-			}
+			yield put({ type: 'getNextList' });
 			const res = yield call(getFile, STATIC.bgKey);
 			if (res) {
 				const { file } = res;
 				yield put({ type: 'setBg', file });
 			}
-			yield put({ type: 'set', list: recordList, page: page + 1 });
+		},
+		*getNextList(action, { put }) {
+			const { page, list: oldList } = yield select(s => s.record);
+			const newList = yield call(list, { page, size: STATIC.size, direction: 'prev' });
+			if (page === 1) {
+				let today = newList[0];
+				if (!today || today.date !== toDateString()) {
+					today = newRecord();
+					newList.unshift(today);
+				}
+			}
+			yield put({ type: 'set', list: oldList.concat(newList), page: page + 1 });
+		},
+		*moveTo({ index: newIndex }, { put }) {
+			const { index, list: recordList } = yield select(s => s.record);
+			if (
+				newIndex === index
+				|| (!newIndex && newIndex !== 0)
+				|| newIndex > recordList.length - 1
+			) return;
+			yield put({ type: 'set', index: newIndex });
+			if (newIndex > recordList.length - STATIC.last - 1) {
+				yield put({ type: 'getNextList' });
+			}
 		},
 		*add({ matter }, { put }) {
 			const { list: recordList } = yield select(state => state.record);
@@ -91,10 +109,6 @@ export default extendModel({
 				...state,
 				list: [data].concat(isNew ? recordList : recordList.slice(1))
 			};
-		},
-		moveTo(state, { index }) {
-			if (index === state.index || (!index && index !== 0)) return state;
-			return { ...state, index };
 		},
 		setBg(state, { file }) {
 			const url = window.URL.createObjectURL(file);

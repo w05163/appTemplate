@@ -12,9 +12,12 @@ export function pickFile(accept = 'image/*', multiple) {
 	input.type = 'file';
 	input.accept = accept;
 	input.multiple = multiple;
+	input.style.display = 'none';
+	document.body.appendChild(input);
 	return new Promise((res) => {
 		input.addEventListener('change', () => {
 			res(input.files);
+			document.body.removeChild(input);
 		});
 		input.click();
 	});

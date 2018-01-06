@@ -18,14 +18,12 @@
 }
 
 // home
-:global{
-	.addOne{
-		position: fixed;
-		z-index: 10;
-		font-size: 24px;
-		color: #F44336;
-		animation: addOne 1s;
-	}
+:global(.addOne){
+	position: fixed;
+	z-index: 10;
+	font-size: 24px;
+	color: #F44336;
+	animation: addOne 1s;
 }
 @keyframes addOne{
 	from {transform: translate3d(0,0,0) scale(0.6,0.6); opacity: 0.9;}

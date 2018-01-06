@@ -10,7 +10,8 @@ const config = {
 	devtool: 'eval',
 	devServer: {
 		contentBase: path.join(__dirname, 'static'),
-		hot: true
+		hot: true,
+		historyApiFallback: true
 	},
 	plugins: [
 		new CleanWebpackPlugin([output]),
